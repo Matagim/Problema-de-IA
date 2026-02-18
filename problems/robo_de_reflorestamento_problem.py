@@ -61,7 +61,7 @@ class ReflorestamentoProblem(Problem):
         pos, sementes, covas = state1
         
         # Custo Variável: Quanto mais sementes, maior o custo de movimento.
-        if action in ['Cima', 'Baixo', 'Direita', 'Oeste']:
+        if action in ['Cima', 'Baixo', 'Direita', 'Esquerda']:
             return c + (1 + 0.5 * sementes)
         
         if action == 'Plantar':
@@ -83,4 +83,5 @@ class ReflorestamentoProblem(Problem):
         for c in covas: 
             distancias.append((pos[0]-c[0]) + abs(pos[1]-c[1]))
             
+
         return min(distancias)
