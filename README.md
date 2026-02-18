@@ -141,6 +141,7 @@ Para executar os testes automáticos do agente (simulando cenários diferentes):
 
 ```bash
 python -m tests.test1
+python -m tests.test2
 ```
 
 > Esses comandos permitem validar tanto a funcionalidade do agente quanto o desempenho dos algoritmos de busca.
