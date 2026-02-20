@@ -5,9 +5,9 @@ from problems.robo_de_reflorestamento_problem import ReflorestamentoProblem
 
 
 class ReflorestamentoAgent(Agent):
-
+    # >>> Adicionei altura e largura para suportar grid de qualquer tamanho.
     # >>> ADICIONADO: parâmetro search_algo para permitir escolher o algoritmo
-    def __init__(self, initial_seeds, max_capacity, base_pos, search_algo=astar_search):
+    def __init__(self, initial_seeds, max_capacity, base_pos, altura, largura, search_algo=astar_search):
 
         super().__init__(self.program)
 
@@ -20,6 +20,12 @@ class ReflorestamentoAgent(Agent):
         self.plan = []
 
         self.location = base_pos
+        
+        self.altura = altura
+        
+        self.largura = largura
+        
+        
 
 
         # >>> ADICIONADO: guarda histórico de ações executadas
@@ -84,9 +90,9 @@ class ReflorestamentoAgent(Agent):
 
             max_capacity=self.max_capacity,
 
-            largura=10,   # >>> ADICIONADO: suporte ao tamanho do grid
+            largura=self.largura,   # >>> ADICIONADO: suporte ao tamanho do grid
 
-            altura=10     # >>> ADICIONADO: suporte ao tamanho do grid
+            altura=self.largura     # >>> ADICIONADO: suporte ao tamanho do grid
 
         )
 

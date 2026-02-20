@@ -14,13 +14,14 @@ def imprimir_comparacao_iterativa(resultados):
     print("\n===== COMPARAÇÃO DE ALGORITMOS (Iterativa) =====\n")
     for nome, dados in resultados.items():
         passos = dados['passos']
-        acoes = dados['acoes']
-        print(f"{nome} encontrou solução em {passos} passos:")
+        custo = dados['custo']
+        #acoes = dados['acoes']
+        print(f"{nome} encontrou solução em {passos} passos e teve {custo} de custo ")
 
-        for i, acao in enumerate(acoes, 1):
-            print(f"{i:03d}. {acao}")
+        """for i, acao in enumerate(acoes, 1):
+            print(f"{i:03d}. {acao}")"""
         print("-" * 60)
-
+    
 
 def main():
     # CONFIGURAÇÃO do grid, base e capacidade de inventário
@@ -34,7 +35,7 @@ def main():
 
     # Inicializa Ambiente e Agente
     env = ReflorestamentoEnv(WIDTH, HEIGHT, BASE, COVAS, MAX_CAP)
-    robot = ReflorestamentoAgent(initial_seeds=MAX_CAP, max_capacity=MAX_CAP, base_pos=BASE)
+    robot = ReflorestamentoAgent(initial_seeds=MAX_CAP, max_capacity=MAX_CAP, base_pos=BASE, largura=WIDTH, altura=HEIGHT)
     env.add_thing(robot, location=BASE)
 
     print("Iniciando simulação...\n")
@@ -67,49 +68,11 @@ def main():
     eficiencia = len(COVAS) / step_count if step_count > 0 else 0
     print(f"Eficiência: {eficiencia:.4f}")
 
-    # =============================
-    # COMPARAÇÃO ENTRE ALGORITMOS
-    # =============================
-    problem = ReflorestamentoProblem(
-        initial=(BASE, MAX_CAP, frozenset(COVAS)),
-        base_pos=BASE,
-        max_capacity=MAX_CAP,
-        largura=WIDTH,
-        altura=HEIGHT
-    )
 
-    algoritmos = {
-        "A*": lambda p: astar_search(p),
-        "BFS": lambda p: breadth_first_graph_search(p),
-        "DFS": lambda p: depth_first_graph_search(p),
-        "UCS": lambda p: uniform_cost_search(p),
-        "GBFS": lambda p: greedy_best_first_graph_search(p, f=lambda n: p.h(n))
-    }
-
-    resultados = {}
-    for nome, func in algoritmos.items():
-        try:
-            node = func(problem)
-            if node:
-                solution = node.solution()
-                resultados[nome] = {"passos": len(solution), "acoes": solution}
-            else:
-                resultados[nome] = {"passos": 0, "acoes": []}
-        except Exception as e:
-            print(f"Erro {nome}: {e}")
-            resultados[nome] = {"passos": 0, "acoes": []}
-
-    # Impressão iterativa
-    imprimir_comparacao_iterativa(resultados)
-
-
-# ===================================
-# TESTE AUTOMÁTICO
-# ===================================
-def teste_automatico(qtd_testes=5):
-    print("\nINICIANDO TESTES AUTOMÁTICOS\n")
-    resultados = []
-
+#Execute quantas vezes quiser em um cenário de covas randomicas
+def covas_randomicas(qtd_testes=5):
+    
+    
     for i in range(qtd_testes):
         print(f"\nTeste {i+1}")
         WIDTH, HEIGHT = 10, 10
@@ -118,23 +81,44 @@ def teste_automatico(qtd_testes=5):
         COVAS = [(random.randint(0, 9), random.randint(0, 9)) for _ in range(5)]
 
         env = ReflorestamentoEnv(WIDTH, HEIGHT, BASE, COVAS, MAX_CAP)
-        robot = ReflorestamentoAgent(initial_seeds=MAX_CAP, max_capacity=MAX_CAP, base_pos=BASE)
+        robot = ReflorestamentoAgent(initial_seeds=MAX_CAP, max_capacity=MAX_CAP, base_pos=BASE, largura=WIDTH, altura=HEIGHT)
         env.add_thing(robot, location=BASE)
 
-        passos = 0
+        print("Iniciando simulação...\n")
+        print("CONFIGURAÇÕES:")
+        print(f"Grid: {WIDTH}x{HEIGHT} | Base: {BASE} | Capacidade: {MAX_CAP} | Covas: {COVAS}\n")
+
+        start_time = time.time()
+        env.render()  # Estado inicial
+        step_count = 0
+        
+
         while not env.is_done():
             env.step()
-            passos += 1
-            if passos > 200:
+            env.render()
+            step_count += 1
+            if step_count > 100:
+                print("Limite de passos excedido.")
                 break
 
-        resultados.append(passos)
-        print("Passos:", passos)
+        execution_time = time.time() - start_time
+        print(f"\nMissão Cumprida em {step_count} passos!\n")
 
-    media = sum(resultados) / len(resultados)
-    print("\nMÉDIA:", media)
-
+        # =============================
+        # MÉTRICAS DO ROBÔ
+        # =============================
+        print("===== RELATÓRIO =====")
+        print(f"Tempo execução: {execution_time:.4f} segundos")
+        print(f"Posição final: {robot.location}")
+        print(f"Sementes restantes: {robot.seeds}")
+        print(f"Total de covas: {len(COVAS)}")
+        eficiencia = len(COVAS) / step_count if step_count > 0 else 0
+        print(f"Eficiência: {eficiencia:.4f}")
+   
+        print("Preparando a próxima iteração...")
+        time.sleep(5)
 
 if __name__ == "__main__":
-    main()
-    # teste_automatico()
+    #main()
+    covas_randomicas()
+    

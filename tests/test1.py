@@ -1,3 +1,15 @@
+import sys
+import os
+
+# Pega o caminho absoluto da pasta atual (teste/)
+diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+
+# Sobe um nível para chegar na pasta raiz (robo_de_reflorestamento/)
+diretorio_pai = os.path.dirname(diretorio_atual)
+
+# Adiciona a pasta raiz ao caminho de busca do Python
+if diretorio_pai not in sys.path:
+    sys.path.append(diretorio_pai)
 from agentes.robo_de_reflorestamento_program import ReflorestamentoAgent
 from problems.robo_de_reflorestamento_problem import ReflorestamentoProblem
 from search import (
@@ -17,6 +29,8 @@ def test_robo_funciona():
     initial_covas = [(2, 2), (3, 3), (4, 4)]
     base = (0, 0)
     capacidade = 5
+    largura = 10
+    altura = 10
 
     estado = (initial_location, initial_seeds, tuple(initial_covas))
 
@@ -24,7 +38,10 @@ def test_robo_funciona():
     agent = ReflorestamentoAgent(
         initial_seeds=initial_seeds,
         max_capacity=capacidade,
-        base_pos=base
+        base_pos=base,
+        largura = largura,
+        altura = altura
+        
     )
 
     print("Estado inicial:", estado)
