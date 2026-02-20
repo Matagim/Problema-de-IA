@@ -1,7 +1,7 @@
 import sys
 import os
 
-# Pega o caminho absoluto da pasta atual (teste/)
+# Pega o caminho absoluto da pasta atual (tests/)
 diretorio_atual = os.path.dirname(os.path.abspath(__file__))
 
 # Sobe um nível para chegar na pasta raiz (robo_de_reflorestamento/)
